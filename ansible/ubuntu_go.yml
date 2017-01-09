@@ -1,0 +1,9 @@
+---
+
+- name: Creates a Go development virtual machine
+  hosts: all
+  remote_user: vagrant
+
+  roles:
+    - common_base_ubuntu  # Installs basic libraries, including GCC, PIP
+    - common_go_ubuntu # Installs Go

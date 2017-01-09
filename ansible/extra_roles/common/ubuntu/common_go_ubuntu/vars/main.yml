@@ -1,0 +1,9 @@
+---
+profile_items:
+  - regexp: "^export GOPATH="
+    line: "export GOPATH=$HOME"
+  - regexp: "^export PATH="
+    line: "export PATH=$PATH:/usr/local/go/bin:$GOPATH/bin"
+  #- regexp: "^gocd ()"
+  #  line: 'function gocd() { cd `go list -f ||<<<<.Dir>>>>|| $1` }\n'
+  #  # https://github.com/ansible/ansible/issues/16610

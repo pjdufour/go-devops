@@ -1,0 +1,45 @@
+---
+
+- name: "Download Go"
+  become: yes
+  become_user: root
+  get_url:
+    url: "https://storage.googleapis.com/golang/go1.7.4.linux-amd64.tar.gz"
+    dest: "/opt/go1.7.4.linux-amd64.tar.gz"
+    checksum: "sha256:47fda42e46b4c3ec93fa5d4d4cc6a748aa3f9411a2a2b7e08e3a6d80d753ec8b"
+
+- name: Create Directorys
+  become: yes
+  become_user: root
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  with_items:
+    - "/opt/go1.7.4.linux-amd64"
+    - "/usr/local/go"
+
+- name: "Extract Go"
+  become: yes
+  become_user: root
+  unarchive:
+    src: /opt/go1.7.4.linux-amd64.tar.gz
+    dest: "/opt/go1.7.4.linux-amd64"
+    copy: no
+    owner: root
+    group: root
+
+- name: Copy Go into /usr/local/go
+  become: yes
+  become_user: root
+  shell: "cp -R /opt/go1.7.4.linux-amd64/go/* /usr/local/go"
+
+#https://docs.ansible.com/ansible/playbooks_advanced_syntax.html
+#https://github.com/ansible/ansible/issues/4638
+- name: "Configure Paths"
+  become: yes
+  become_user: root
+  lineinfile: dest="/etc/profile.d/go.sh" regexp="{{ item.regexp }}" line="{{ item.line | unsafe }}" state="present" create=yes owner="root" group="root" mode="u=rwx,g=rx,o=rx"
+  with_items: "{{ profile_items }}"
